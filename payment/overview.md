@@ -73,6 +73,12 @@ Notes:
 - While a refund is in progress the order reports `failed`
   (`reason: "refund_pending"`); once the refund completes it reports
   `refunded`, and an `order.status_changed` webhook is sent for it.
+- The refunded amount depends on where the funds are. If the BRL is still
+  in the collection account, it is refunded in full. If it has been sent on
+  for conversion to USDC or USD, it is converted back to BRL and then
+  refunded; fees and the FX spread are deducted, so the payer can receive
+  less than they paid. Whatever the conversion back yields is refunded, even
+  if it is more than the payer paid.
 - An order cancelled before payment reports `cancelled`, and an
   `order.status_changed` webhook is sent for it. (An expired Pix is reported
   as `pix_expired` instead.) See [Cancel an order](api/cancel-order.md).
